@@ -32,8 +32,6 @@ module.exports = {
                 country_id INT REFERENCES countries(country_id)
                 );
 
-            
-
             insert into countries (name)
             values ('Afghanistan'),
             ('Albania'),
@@ -235,5 +233,75 @@ module.exports = {
             console.log('DB seeded!')
             res.sendStatus(200)
         }).catch(err => console.log('error seeding DB', err))
+    },
+
+    getCountries: (req, res) => {
+        sequelize.query(`
+        SELECT name, country_id FROM countries`)
+
+        .then((dbRes) => {
+            console.log('getCountries running')
+            res.status(200).send(dbRes[0])
+         })
+         .catch((theseHands) => {
+            console.log('Error with createCity')
+            console.log(theseHands)
+            res.status(500).send(theseHands)
+         })
+    },
+
+    createCity: (req, res) => {
+
+        const {name, rating, countryId} = req.body
+
+        sequelize.query(`
+        INSERT INTO cities
+        (name, rating, countryId)
+        VALUES
+        ('${name}', ${rating}, ${countryId});
+        `)
+        
+        .then((dbRes) => {
+            console.log('createCity running')
+            res.status(200).send(dbRes[0])
+         })
+         .catch((theseHands) => {
+            console.log('Error with createCity')
+            console.log(theseHands)
+            res.status(500).send(theseHands)
+         })
+    },
+
+    getCities: (req, res) => {
+        sequelize.query(`
+        SELECT name, city_id FROM cities`)
+
+        .then((dbRes) => {
+            console.log('getCities running')
+            res.status(200).send(dbRes[0])
+         })
+         .catch((theseHands) => {
+            console.log('Error with createCity')
+            console.log(theseHands)
+            res.status(500).send(theseHands)
+         })
+    },
+
+    deleteCity: (req, res) => {
+        const {id} = req.params
+
+        sequelize.query(`
+            DELETE FROM cities
+            WHERE id = ${id}
+        `)
+        .then((dbRes) => {
+            console.log('getCities running')
+            res.status(200).send(dbRes[0])
+         })
+         .catch((theseHands) => {
+            console.log('Error with createCity')
+            console.log(theseHands)
+            res.status(500).send(theseHands)
+         })
     }
 }
